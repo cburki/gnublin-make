@@ -6,9 +6,9 @@
 ## Maintainer   : Christophe Burki
 ## Created      : Tue May 27 10:15:52 2014
 ## Version      : 
-## Last-Updated : Tue May 27 13:46:33 2014 (7200 CEST)
+## Last-Updated : Sun Jun 22 11:49:24 2014 (7200 CEST)
 ##           By : Christophe Burki
-##     Update # : 66
+##     Update # : 67
 ## URL          : 
 ## Keywords     : 
 ## Compatibility: 
@@ -29,9 +29,8 @@
 ######################################################################
 ## 
 ## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published by
-## the Free Software Foundation; either version 2, or (at your option)
-## any later version.
+## it under the terms of the GNU General Public License version 3 as
+## published by the Free Software Foundation.
 ## 
 ## This program is distributed in the hope that it will be useful,
 ## but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -39,7 +38,7 @@
 ## GNU General Public License for more details.
 ## 
 ## You should have received a copy of the GNU General Public License
-## along with this program; see the file COPYING.  If not, write to the
+## along with this program; see the file LICENSE.  If not, write to the
 ## Free Software Foundation, Inc., 51 Franklin Street, Fifth
 ## ;; Floor, Boston, MA 02110-1301, USA.
 ## 
