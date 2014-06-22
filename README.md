@@ -18,6 +18,11 @@ Publication of files is done using [fabric][1], a python library and command-lin
     HOST := 192.168.1.10
     PORT := 22
 
+The files to publish and where to publish them on the target with wich permissions is specified in the INSTALL_FILE file. This file is read by the fabric *fabfile* when during publishing. Edit the INSTALL_FILE file and modifiy the target path and permissions if needed. Here is an example of an installation file.
+
+    # file        target path                  owner        mode
+    myprog        /usr/local/bin/myprog        root:root    755
+
 You need to checkout this repository when you checkout the [gnublin-modules][2] repository.
 
 
