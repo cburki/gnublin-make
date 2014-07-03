@@ -7,9 +7,9 @@
 ## Maintainer   : Christophe Burki
 ## Created      : Wed Apr 23 20:18:06 2014
 ## Version      : 1.0.0
-## Last-Updated : Sun Jun 22 11:48:47 2014 (7200 CEST)
+## Last-Updated : Thu Jul  3 13:22:04 2014 (7200 CEST)
 ##           By : Christophe Burki
-##     Update # : 103
+##     Update # : 110
 ## URL          : 
 ## Keywords     : 
 ## Compatibility: 
@@ -51,16 +51,20 @@
 #
 # This makefile also defines the following goalds for use to run make :
 #
-# all        This is the default when no goal is given,. It builds the
-#            target.
+# all                  This is the default when no goal is given,. It builds
+#                      the target.
 #
-# target     Builds the target.
+# target               Builds the target.
+#
+# python-module        Build python module.
+#
+# clean                Deletes files created during the build.
+#
+# python-module-clean  Deletes files created during python build.
 # 
-# clean      Deletes file created during the build.
+# distclean            Clean and remove *~ files.
 #
-# distclean  Clean and remove *~ files.
-#
-# publish    Publish the target to the destination.
+# publish              Publish the target to the destination.
 # 
 ######################################################################
 ## 
@@ -88,8 +92,6 @@ LDFLAGS +=  $(GNUBLINAPI_LIB)
 
 OBJECTS := $(addsuffix .o, $(basename $(SOURCES)))
 
-# Remove the extension .o from objects
-#NAMES := $(patsubst %.o,%,$(OBJECTS))
 
 #
 # --------------------------------------------------------------------
@@ -109,14 +111,25 @@ $(TARGET) : $(OBJECTS)
 %.o : %.cpp
 	$(GCC) -c -o $@ $< $(CPPFLAGS)
 
-#python-module : $(OBJECTS)
-#	$(error Not yet implemented "$(NAMES)")
+
+python-module: $(OBJECTS)
+	@echo "%module gnublin_$(MODULE)" > gnublin_$(MODULE).i
+	@echo "%include \"std_string.i\"" >> gnublin_$(MODULE).i
+	@echo "%{" >> gnublin_$(MODULE).i
+	@echo "#include \"$(MODULE).h\"" >> gnublin_$(MODULE).i
+	@echo "%}" >> gnublin_$(MODULE).i
+	@echo "#define BOARD $(BOARD)" >> gnublin_$(MODULE).i
+	@echo "%include \"$(MODULE).h\"" >> gnublin_$(MODULE).i
+	swig2.0 -c++ -python gnublin_$(MODULE).i
+	$(GCC) $(CPPFLAGS) -fpic -I $(GNUBLINAPIDIR)/python2.7/ -c gnublin_$(MODULE)_wrap.cxx
+	$(GCC) $(CPPFLAGS) -fpic -c $(MODULE).cpp
+	$(GCC) -shared gnublin_$(MODULE)_wrap.o $(MODULE).o $(GNUBLINAPIDIR)/gnublin.o -o _gnublin_$(MODULE).so
 
 clean : 
 	rm -Rf *.o $(TARGET)
 
-#python-module-clean : clean
-#	rm -f *.i *.py *.pyc *_wrap.cxx _*.so
+python-module-clean : clean
+	rm -f *.i *.py *.pyc *_wrap.cxx _*.so
 
 distclean : clean
 	rm -f *~
