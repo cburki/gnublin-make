@@ -7,9 +7,9 @@
 ## Maintainer   : Christophe Burki
 ## Created      : Wed Apr 23 20:18:06 2014
 ## Version      : 1.0.0
-## Last-Updated : Thu Jul  3 13:22:04 2014 (7200 CEST)
+## Last-Updated : Sun Aug 31 14:27:59 2014 (7200 CEST)
 ##           By : Christophe Burki
-##     Update # : 110
+##     Update # : 214
 ## URL          : 
 ## Keywords     : 
 ## Compatibility: 
@@ -88,10 +88,9 @@ GNUBLINAPI_LIB := $(GNUBLINAPIDIR)/gnublin.a
 GCC := $(CXX)
 #LD := arm-linux-gnueabi-ld
 CPPFLAGS += $(CXXFLAGS) $(GNUBLINAPI_INC) $(BOARDDEF)
-LDFLAGS +=  $(GNUBLINAPI_LIB)
+LDFLAGS +=  -L$(GNUBLINAPIDIR) -lgnublin
 
 OBJECTS := $(addsuffix .o, $(basename $(SOURCES)))
-
 
 #
 # --------------------------------------------------------------------
@@ -111,8 +110,10 @@ $(TARGET) : $(OBJECTS)
 %.o : %.cpp
 	$(GCC) -c -o $@ $< $(CPPFLAGS)
 
-
 python-module: $(OBJECTS)
+ifndef MODULE
+	$(error "MODULE not defined !")
+endif
 	@echo "%module gnublin_$(MODULE)" > gnublin_$(MODULE).i
 	@echo "%include \"std_string.i\"" >> gnublin_$(MODULE).i
 	@echo "%{" >> gnublin_$(MODULE).i
@@ -126,12 +127,12 @@ python-module: $(OBJECTS)
 	$(GCC) -shared gnublin_$(MODULE)_wrap.o $(MODULE).o $(GNUBLINAPIDIR)/gnublin.o -o _gnublin_$(MODULE).so
 
 clean : 
-	rm -Rf *.o $(TARGET)
+	rm -Rf *.o *.a $(TARGET)
 
 python-module-clean : clean
 	rm -f *.i *.py *.pyc *_wrap.cxx _*.so
 
-distclean : clean
+distclean : python-module-clean
 	rm -f *~
 
 publish : $(TARGET)
