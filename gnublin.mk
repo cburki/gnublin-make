@@ -7,9 +7,9 @@
 ## Maintainer   : Christophe Burki
 ## Created      : Wed Apr 23 20:18:06 2014
 ## Version      : 1.0.0
-## Last-Updated : Sun Aug 31 14:27:59 2014 (7200 CEST)
+## Last-Updated : Wed Sep  3 17:01:08 2014 (7200 CEST)
 ##           By : Christophe Burki
-##     Update # : 214
+##     Update # : 219
 ## URL          : 
 ## Keywords     : 
 ## Compatibility: 
@@ -110,10 +110,8 @@ $(TARGET) : $(OBJECTS)
 %.o : %.cpp
 	$(GCC) -c -o $@ $< $(CPPFLAGS)
 
-python-module: $(OBJECTS)
-ifndef MODULE
-	$(error "MODULE not defined !")
-endif
+python-module:: $(OBJECTS)
+ifdef MODULE
 	@echo "%module gnublin_$(MODULE)" > gnublin_$(MODULE).i
 	@echo "%include \"std_string.i\"" >> gnublin_$(MODULE).i
 	@echo "%{" >> gnublin_$(MODULE).i
@@ -125,6 +123,7 @@ endif
 	$(GCC) $(CPPFLAGS) -fpic -I $(GNUBLINAPIDIR)/python2.7/ -c gnublin_$(MODULE)_wrap.cxx
 	$(GCC) $(CPPFLAGS) -fpic -c $(MODULE).cpp
 	$(GCC) -shared gnublin_$(MODULE)_wrap.o $(MODULE).o $(GNUBLINAPIDIR)/gnublin.o -o _gnublin_$(MODULE).so
+endif
 
 clean : 
 	rm -Rf *.o *.a $(TARGET)
